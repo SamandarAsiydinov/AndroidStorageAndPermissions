@@ -37,6 +37,38 @@ class MainActivity : AppCompatActivity() {
 
     private fun initViews() {
         requestPermissions()
+        binding.btnSaveExternal.setOnClickListener {
+            saveExternalFile("Android Developer")
+        }
+        binding.btnReadExternal.setOnClickListener {
+            readExternalFile()
+        }
+    }
+
+    private fun readExternalFile() {
+        val fileName = "pdp_academy.txt"
+        val file: File = if (isPersistent) {
+            File(getExternalFilesDir(null), fileName)
+        } else {
+            File(externalCacheDir, fileName)
+        }
+    }
+
+    private fun saveExternalFile(data: String) {
+        val fileName = "pdp_academy.txt"
+        val file: File = if (isPersistent) {
+            File(getExternalFilesDir(null),fileName)
+        } else {
+            File(externalCacheDir,fileName)
+        }
+        try {
+            val fileOutputStream = FileOutputStream(file)
+            fileOutputStream.write(data.toByteArray(Charset.forName("UTF-8")))
+            toast(String.format(("Write to %s successful"), fileName))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            toast(String.format(("Read from file %s failed $e"), fileName))
+        }
     }
 
     private fun requestPermissions() {
